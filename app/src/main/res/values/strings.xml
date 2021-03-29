@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">TutaDriver</string>
+    <string name="welcome_to_tuta_driver">Welcome to Tuta Driver</string>
+    <string name="todo">TODO</string>
+    <string name="be_you_r_own_boss">Be your own Boss</string>
+    <string name="register_here">Register here</string>
+    <string name="by_proceeding_i_agree_to_the_tuta_terms_and_conditions">By proceeding I agree to the Tuta Terms and Conditions</string>
+    <string name="phone_number">Phone number</string>
+    <string name="todo">TODO</string>
+    <string name="verify">Verify</string>
+    <string name="verification">Verification</string>
+    <string name="enter_the_pin_sent_to_you_phone_number_to_verify_your_account">Enter the pin sent to you phone number to verify your account</string>
+    <string name="didn_t_receive_an_sms">Didn\'t receive an SMS?</string>
+    <string name="resend">Resend</string>
+    <string name="be_you_r_own_boss">Be your own Boss</string>
+</resources>
