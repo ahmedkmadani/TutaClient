@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_trasnsction"
+        android:icon="@drawable/ic_cube"
+        tools:ignore="MenuTitle" />
+    <item
+        android:id="@+id/home"
+        android:icon="@mipmap/ic_home"
+        tools:ignore="MenuTitle" />
+    <item
+        android:id="@+id/profile"
+        android:icon="@mipmap/ic_person_circle"
+        tools:ignore="MenuTitle" />
+</menu>

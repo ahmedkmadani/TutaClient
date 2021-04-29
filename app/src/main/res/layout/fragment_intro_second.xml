@@ -3,18 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".fragment.IntroSecondFragment">
 
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/appCompatImageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:foreground="@drawable/splash_image_overlay"
         android:scaleType="fitXY"
-        android:src="@mipmap/splash_bg"
+        android:src="@mipmap/splash_bg_"
         tools:layout_editor_absoluteX="-29dp"
-        tools:layout_editor_absoluteY="30dp">
+        tools:layout_editor_absoluteY="30dp"
+        tools:targetApi="m">
 
     </androidx.appcompat.widget.AppCompatImageView>
 

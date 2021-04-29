@@ -18,9 +18,19 @@
     <color name="text_register">#111111</color>
     <color name="text_otp">#9C9C9C</color>
     <color name="text_add_vehicle">#9A9A9A</color>
+    <color name="text_login">#343434</color>
+    <color name="text_terms_and_conditions">#707070</color>
+    <color name="text_upload_doc">#747474</color>
+    <color name="text_upload">#ACD0EF</color>
+    <color name="view_upload">#C4CFFF</color>
+    <color name="text_dashboard_currency">#F56464</color>
+    <color name="text_bottom_sheet">#777777</color>
+
 
     <!-- Screens background color-->
     <color name="bg_register">#ECF6FF</color>
+    <color name="border_color">#C4CFFF</color>
+    <color name="card_indicator_active">#F56464</color>
 
 
 </resources>
