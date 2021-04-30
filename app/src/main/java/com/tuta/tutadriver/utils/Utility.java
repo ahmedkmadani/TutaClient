@@ -52,7 +52,7 @@ public class Utility extends AppCompatActivity {
         snackbar.show();
     }
 
-    //    function to check if user conncted to internet
+    //    function to check if user connected to internet
     public boolean isOnline(Context context){
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = cm.getActiveNetworkInfo();

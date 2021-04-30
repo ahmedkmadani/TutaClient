@@ -8,24 +8,24 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.tuta.tutadriver.R;
+import com.tuta.tutadriver.databinding.ActivityAddVehicalBinding;
 
 public class AddVehicleActivity extends AppCompatActivity {
+    ActivityAddVehicalBinding mBinding;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_vehical);
+        mBinding = ActivityAddVehicalBinding.inflate(getLayoutInflater());
+        setContentView(mBinding.getRoot());
 
-        TextView tv_terms = findViewById(R.id.textview_terms);
 
-        tv_terms.setOnClickListener(v -> {
+        mBinding.textviewTerms.setOnClickListener(v -> {
             Intent i = new Intent(AddVehicleActivity.this, TermsActivity.class);
             startActivity(i);
         });
 
 
-        Button BtnContinue = findViewById(R.id.BtnContinue);
-
-        BtnContinue.setOnClickListener(v -> {
+        mBinding.BtnContinue.setOnClickListener(v -> {
             Intent i = new Intent(AddVehicleActivity.this, AddDocumentActivity.class);
             startActivity(i);
 

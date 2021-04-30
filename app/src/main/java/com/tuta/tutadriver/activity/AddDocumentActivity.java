@@ -8,23 +8,25 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.tuta.tutadriver.R;
+import com.tuta.tutadriver.databinding.ActivityCreateAccountBinding;
+import com.tuta.tutadriver.databinding.ActivityUploadDocumentBinding;
 
 public class AddDocumentActivity extends AppCompatActivity {
+    ActivityUploadDocumentBinding mBinding;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_upload_document);
+        mBinding = ActivityUploadDocumentBinding.inflate(getLayoutInflater());
+        setContentView(mBinding.getRoot());
 
-        TextView tv_terms = findViewById(R.id.textview_terms);
 
-        tv_terms.setOnClickListener(v -> {
+        mBinding.textviewTerms.setOnClickListener(v -> {
             Intent i = new Intent(AddDocumentActivity.this, TermsActivity.class);
             startActivity(i);
         });
 
-        Button BtnSetupPayment= findViewById(R.id.BtnContinue);
 
-        BtnSetupPayment.setOnClickListener(v -> {
+        mBinding.BtnContinue..setOnClickListener(v -> {
             Intent i = new Intent(AddDocumentActivity.this, PaymentDetailsActivity.class);
             startActivity(i);
         });

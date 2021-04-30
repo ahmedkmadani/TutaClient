@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:background="@color/bg_register"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".activity.AddVehicleActivity">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textview_terms"
@@ -179,6 +180,7 @@
                 android:scaleType="centerInside"
                 app:layout_constraintBottom_toTopOf="@+id/text_view_meduim"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:srcCompat="@mipmap/tuta_m"
                 app:layout_constraintHorizontal_bias="0.076"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -226,6 +228,7 @@
                 android:layout_marginEnd="25dp"
                 android:layout_marginBottom="16dp"
                 android:scaleType="centerInside"
+                app:srcCompat="@mipmap/tuta_l"
                 app:layout_constraintBottom_toTopOf="@+id/text_view_large"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.571"
