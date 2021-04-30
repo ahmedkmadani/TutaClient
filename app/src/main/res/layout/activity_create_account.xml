@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:layout_width="match_parent"
+    tools:context=".activity.CreateAccountActivity">
 
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
@@ -218,7 +219,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:elevation="6dp"
-        android:hint="@string/_254_701980075"
+        android:hint="@string/phone_number"
         android:textColorHint="@color/text_add_vehicle"
         app:boxBackgroundColor="@color/white"
         app:boxCornerRadiusBottomEnd="8dp"
@@ -238,7 +239,10 @@
             android:layout_height="wrap_content"
             android:drawableEnd="@drawable/ic_checkmark_circle"
             android:fontFamily="@font/interregular"
-            android:inputType="phone"
+            android:inputType="none"
+            android:clickable="false"
+            android:cursorVisible="false"
+            android:enabled="false"
             android:textColor="@color/text_add_vehicle"
             android:textSize="16sp" />
     </com.google.android.material.textfield.TextInputLayout>

@@ -37,7 +37,7 @@ public class IntroActivity extends AppCompatActivity {
                 setUpCurrentIndicator(position);
                 if(position == 1) {
 
-                    startActivity(new Intent(IntroActivity.this , LoginActivity.class));
+                    startActivity(new Intent(IntroActivity.this , WelcomeActivity.class));
                 }
             }
 
@@ -50,11 +50,11 @@ public class IntroActivity extends AppCompatActivity {
         binding.introViewPager.setUserInputEnabled(true);
         adapter = new ViewPagerAdapter(this);
 
-        IntroFirstFragment firstFragment = new IntroFirstFragment();
-        IntroSecondFragment secondFragment = new IntroSecondFragment();
+        IntroFirstFragment IntofirstFragment = new IntroFirstFragment();
+        IntroSecondFragment IntosecondFragment = new IntroSecondFragment();
 
-        adapter.addFragment(firstFragment, "first");
-        adapter.addFragment(secondFragment, "second");
+        adapter.addFragment(IntofirstFragment, "first");
+        adapter.addFragment(IntosecondFragment, "second");
 
         setUpCardIndicators();
 

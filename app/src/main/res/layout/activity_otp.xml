@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:background="@color/bg_register"
     android:layout_height="match_parent"
-    tools:ignore="MissingClass">
+    tools:context=".activity.PinVerficationActivity">
 
-    <Button
-        android:id="@+id/BtnContinue"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/BtnVerify"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -102,8 +102,8 @@
         app:lineWidth="2dp"
         app:viewType="rectangle" />
 
-    <TextView
-        android:id="@+id/textView8"
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/textResend"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="29dp"

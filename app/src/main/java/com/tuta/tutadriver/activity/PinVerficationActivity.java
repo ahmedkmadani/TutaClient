@@ -5,51 +5,49 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.widget.Button;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.HttpHeaderParser;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.chaos.view.PinView;
 import com.tuta.tutadriver.R;
+import com.tuta.tutadriver.databinding.ActivityOtpBinding;
 import com.tuta.tutadriver.utils.UrLs;
 import com.tuta.tutadriver.utils.Utility;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
+public class PinVerficationActivity extends Utility {
 
-public class PinVerficationActivity extends AppCompatActivity {
-
-    PinView mPinView;
     String StringPin;
-    String PhoneNumber;
-    Button BtnVerfiy;
+    String FullPhoneNumber;
 
-    Utility mUtility;
+    ActivityOtpBinding mBinding;
+    String msg;
+    View view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_otp);
+        mBinding = ActivityOtpBinding.inflate(getLayoutInflater());
+        setContentView(mBinding.getRoot());
 
-        Intent i = getIntent();
-        PhoneNumber = i.getExtras().getString("PhoneNumber");
+        FullPhoneNumber = getIntent().getExtras().getString("PhoneNumber");
+        view = findViewById(android.R.id.content);
 
-        mUtility = new Utility();
+        Log.d("FullPhoneNumber", FullPhoneNumber);
+        if(isOnline(this)) {
+            GetOTP(FullPhoneNumber);
+        } else {
+            ShowSnackbBarNoInternet(getApplicationContext(), view);
+        }
 
-        BtnVerfiy = findViewById(R.id.BtnContinue);
-        mPinView = findViewById(R.id.tutaPinView);
-
-        mPinView.addTextChangedListener(new TextWatcher() {
+        mBinding.tutaPinView.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -64,12 +62,45 @@ public class PinVerficationActivity extends AppCompatActivity {
             }
         });
 
-        BtnVerfiy.setOnClickListener(v -> {
-            VerifyOTP(StringPin, PhoneNumber);
+        mBinding.textResend.setOnClickListener(v -> {
+            GetOTP(FullPhoneNumber);
+        });
+
+        mBinding.BtnVerify.setOnClickListener(v -> {
+            if(isOnline(this)) {
+                VerifyOTP(StringPin, FullPhoneNumber);
+            } else {
+                ShowSnackbBarNoInternet(getApplicationContext(), view);
+            }
         });
     }
 
-    private void VerifyOTP(String stringPin, String phoneNumber) {
+    private void GetOTP(String phoneNumber) {
+        try {
+            RequestQueue requestQueue = Volley.newRequestQueue(this);
+            JSONObject jsonBody = new JSONObject();
+            jsonBody.put("phone_number", phoneNumber);
+            JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.POST, UrLs.otpRequest, jsonBody,
+                    response -> {
+                        Log.d("res", response.toString());
+                        try {
+                             msg = response.getString("message");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        ShowSnackBar(getApplicationContext(), view, msg);
+                    }, error -> {
+                        VolleyLog.e("Error: ", error.getMessage());
+                       ShowSnackBar(getApplicationContext(), view, String.valueOf(R.string.error_msg_otp));
+                    });
+
+            requestQueue.add(request_json);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+        private void VerifyOTP(String stringPin, String phoneNumber) {
             if (!validate()) {
                 return;
             }
@@ -78,46 +109,44 @@ public class PinVerficationActivity extends AppCompatActivity {
                 JSONObject jsonBody = new JSONObject();
                 jsonBody.put("phone_number", phoneNumber);
                 jsonBody.put("otp_code", stringPin);
-                jsonBody.put("device_name", mUtility.getDeviceName());
+                jsonBody.put("device_name", getDeviceName());
+                JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.POST, UrLs.otpVerification, jsonBody,
+                        response -> {
+                            try {
+                                onSucceedActivity(phoneNumber);
+                                JSONObject data = response.getJSONObject("data");
+                                String verified = data.getString("verified");
+                                String phonenumber = data.getString("phone_number");
+                                msg = data.getString("message");
+                                if(verified == "true"){
+                                    ShowSnackBar(getApplicationContext(), view, msg);
+                                    onSucceedActivity(phonenumber);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            Log.d("res", response.toString());
+                        }, error -> {
+                            VolleyLog.e("Error: ", error.getMessage());
+                            msg = getString(R.string.error_msg_verify_otp);
+                            ShowSnackBar(getApplicationContext(), view, msg);
+                        });
 
-                final String mRequestBody = jsonBody.toString();
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, UrLs.otpVerification, response -> {
-                    Log.i("LOG_RESPONSE", response);
-                }, error -> Log.d("error", error.toString())) {
-                    @Override
-                    public String getBodyContentType() {
-                        return "application/json; charset=utf-8";
-                    }
-
-                    @Override
-                    public byte[] getBody() {
-                        try {
-                            return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
-                        } catch (UnsupportedEncodingException uee) {
-                            VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
-                            return null;
-                        }
-                    }
-
-                    @Override
-                    protected Response<String> parseNetworkResponse(NetworkResponse response) {
-                        String responseString = "";
-                        if (response != null) {
-                            responseString = String.valueOf(response.statusCode);
-                        }
-                        return Response.success(responseString, HttpHeaderParser.parseCacheHeaders(response));
-                    }
-                };
-
-                requestQueue.add(stringRequest);
+                requestQueue.add(request_json);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
 
+    private void onSucceedActivity(String phonenumber) {
+        Intent i = new Intent(PinVerficationActivity.this, CreateAccountActivity.class);
+        i.putExtra("PhoneNumber", phonenumber);
+        startActivity(i);
+    }
+
     private boolean validate() {
         boolean valid = true;
-        if (mPinView.getText().toString().isEmpty()) {
+        if (mBinding.tutaPinView.getText().toString().isEmpty()) {
             valid = false;
         } else {
 

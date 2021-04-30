@@ -1,5 +1,6 @@
 package com.tuta.tutadriver.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,60 +18,47 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.tuta.tutadriver.R;
+import com.tuta.tutadriver.databinding.ActivityRegisterBinding;
+
 import com.tuta.tutadriver.utils.UrLs;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class SignupActivity extends AppCompatActivity {
+    ActivityRegisterBinding mBinding;
     String phoneNumber;
-    EditText inputPhone;
-    Button BtnContinue;
+    String FullPhoneNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        mBinding = ActivityRegisterBinding.inflate(getLayoutInflater());
+        setContentView(mBinding.getRoot());
 
-        TextView tv_terms = findViewById(R.id.textview_terms);
-        inputPhone = findViewById(R.id.input_phone);
 
-        tv_terms.setOnClickListener(v -> {
+        mBinding.textviewTerms.setOnClickListener(v -> {
             Intent i = new Intent(SignupActivity.this, TermsActivity.class);
             startActivity(i);
         });
 
-        BtnContinue = findViewById(R.id.BtnContinue);
-        BtnContinue.setOnClickListener(v -> {
-            phoneNumber = inputPhone.getText().toString();
-            GetOTP(phoneNumber);
+        mBinding.BtnContinue.setOnClickListener(v -> {
+
+            mBinding.ccp.registerPhoneNumberTextView(mBinding.inputPhone);
+            mBinding.ccp.enablePhoneAutoFormatter(true);
+            mBinding.ccp.enableHint(false);
+
+            if(mBinding.ccp.isValid()){
+                phoneNumber = mBinding.inputPhone.getText().toString();
+                if(phoneNumber.startsWith("0")){
+                    FullPhoneNumber = mBinding.ccp.getSelectedCountryCode()+phoneNumber.substring(1);
+                }else{
+                    FullPhoneNumber = mBinding.ccp.getFullNumber();
+                }
+            }
+            Intent i = new Intent(SignupActivity.this, PinVerficationActivity.class);
+            i.putExtra("PhoneNumber", FullPhoneNumber);
+            startActivity(i);
         });
-    }
-
-    private void GetOTP(String phonenumber) {
-        if (!validate()) {
-            return;
-        }
-
-    }
-
-    private void onFailResponse(VolleyError error) {
-    }
-
-    private void OnSuccedResponse(String phonenumber) {
-        Intent i = new Intent(SignupActivity.this, PinVerficationActivity.class);
-        i.putExtra("PhoneNumber", phonenumber);
-        startActivity(i);
-    }
-
-    private boolean validate() {
-        boolean valid = true;
-        if (phoneNumber.isEmpty() && !Patterns.PHONE.matcher(phoneNumber).matches()) {
-            inputPhone.setError("Please enter valid phone number");
-            valid = false;
-        } else {
-            inputPhone.setError(null);
-        }
-        return valid;
     }
 }

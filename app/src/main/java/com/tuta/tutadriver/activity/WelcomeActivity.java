@@ -7,22 +7,22 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.tuta.tutadriver.R;
+import com.tuta.tutadriver.databinding.ActivityWelcomeBinding;
 
 public class WelcomeActivity extends AppCompatActivity {
+    ActivityWelcomeBinding mBinding;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_welcome);
+        mBinding = ActivityWelcomeBinding.inflate(getLayoutInflater());
+        setContentView(mBinding.getRoot());
 
-        Button LoginBtn = findViewById(R.id.LoginBtn);
-        Button JoinBtn = findViewById(R.id.JoinBtn);
-
-        LoginBtn.setOnClickListener(v -> {
+        mBinding.LoginBtn.setOnClickListener(v -> {
             Intent i = new Intent(WelcomeActivity.this, LoginActivity.class);
             startActivity(i);
         });
 
-        JoinBtn.setOnClickListener(v -> {
+        mBinding.JoinBtn.setOnClickListener(v -> {
             Intent i = new Intent(WelcomeActivity.this, SignupActivity.class);
             startActivity(i);
         });

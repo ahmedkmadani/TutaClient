@@ -88,4 +88,7 @@
     <string name="this_items_require_special_packaging">This items require special packaging</string>
     <string name="sculpture">Sculpture</string>
     <string name="finish_moving">Finish moving</string>
+    <string name="error_msg_otp">Sorry an error occurred getting the OTP, please try again</string>
+    <string name="error_msg_verify_otp">Sorry an error occurred while verifying OTP, please try again</string>
+    <string name="error_no_internet">Please check your internet connection</string>
 </resources>
