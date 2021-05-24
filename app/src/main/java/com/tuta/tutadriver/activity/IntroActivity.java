@@ -53,8 +53,8 @@ public class IntroActivity extends AppCompatActivity {
         IntroFirstFragment IntofirstFragment = new IntroFirstFragment();
         IntroSecondFragment IntosecondFragment = new IntroSecondFragment();
 
-        adapter.addFragment(IntofirstFragment, "first");
-        adapter.addFragment(IntosecondFragment, "second");
+        adapter.addFragment(IntofirstFragment, "IntroFirstFragment");
+        adapter.addFragment(IntosecondFragment, "IntroSecondFragment");
 
         setUpCardIndicators();
 

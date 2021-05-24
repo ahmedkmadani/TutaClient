@@ -1,29 +1,11 @@
 package com.tuta.tutadriver.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.util.Patterns;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.tuta.tutadriver.R;
 import com.tuta.tutadriver.databinding.ActivityRegisterBinding;
-
-import com.tuta.tutadriver.utils.UrLs;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class SignupActivity extends AppCompatActivity {
     ActivityRegisterBinding mBinding;

@@ -74,6 +74,7 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="5dp"
                 android:layout_weight="1"
+                app:ccp_defaultNameCode="ZA"
                 app:ccp_hideNameCode="true" />
 
 

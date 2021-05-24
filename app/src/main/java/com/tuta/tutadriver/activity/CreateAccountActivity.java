@@ -5,35 +5,26 @@ import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.tuta.tutadriver.R;
 import com.tuta.tutadriver.databinding.ActivityCreateAccountBinding;
+import com.tuta.tutadriver.model.User;
+import com.tuta.tutadriver.utils.CustomRequest;
+import com.tuta.tutadriver.utils.SharedPrefManager;
 import com.tuta.tutadriver.utils.UrLs;
 import com.tuta.tutadriver.utils.Utility;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-
 public class CreateAccountActivity extends Utility {
 
     ActivityCreateAccountBinding mBinding;
-    String PhoneNumber ;
+    String PhoneNumber;
     View view;
 
     @Override
@@ -53,7 +44,7 @@ public class CreateAccountActivity extends Utility {
 
         mBinding.inputPhone.setText(PhoneNumber);
         mBinding.BtnContinue.setOnClickListener(v -> {
-            if(isOnline(this)) {
+            if (isOnline(this)) {
                 CreateAccount();
             } else {
                 ShowSnackbBarNoInternet(getApplicationContext(), view);
@@ -65,32 +56,57 @@ public class CreateAccountActivity extends Utility {
         if (!validate()) {
             return;
         }
+        JSONObject jsonBody = new JSONObject();
+
         try {
-            RequestQueue requestQueue = Volley.newRequestQueue(this);
-            JSONObject jsonBody = new JSONObject();
-            jsonBody.put("first_name", "Ahmed");
-            jsonBody.put("last_name", "Kamal");
+            jsonBody.put("first_name", mBinding.inputFname.getText().toString());
+            jsonBody.put("last_name", mBinding.inputLname.getText().toString());
             jsonBody.put("phone_number", PhoneNumber);
             jsonBody.put("user_type", "driver");
             jsonBody.put("city_id", "1");
-            jsonBody.put("password", "pass");
-            jsonBody.put("email", "email");
+            jsonBody.put("password", mBinding.inputPassword.getText().toString());
+            jsonBody.put("email", mBinding.inputEmail.getText().toString());
 
-            JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.POST, UrLs.register, jsonBody,
-                    response -> {
+            }
+                catch (JSONException e) {
+                e.printStackTrace();
+        }
+            Log.d("jsonBody", jsonBody.toString());
 
-                        Log.d("res", response.toString());
-                    }, error -> {
-                VolleyLog.e("Error: ", error.getMessage());
+            makeRawRequest(Request.Method.POST, UrLs.register, jsonBody, "", new CustomRequest.VolleyResponseListener() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    Log.d("response", response.toString());
+                    try {
+                        JSONObject data = response.getJSONObject("data");
+                        User user = new User(
+                                data.getInt("id"),
+                                data.getString("name"),
+                                data.getString("email"),
+                                data.getString("phone_number"),
+                                data.getString("user_type")
+                        );
+                        SharedPrefManager.getInstance(getApplicationContext()).userLogin(user);
+                        onSiginSuccess(data.getString("name"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
 
+                @Override
+                public void onError(String message) {
+                    Log.e("error", message);
+                    ShowSnackBar(getApplicationContext(), view, "An error occurred , please try again");
+                }
             });
 
-            requestQueue.add(request_json);
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
-    }
 
+    private void onSiginSuccess(String name) {
+        ShowSnackBar(getApplicationContext(), view, name + " , Welcome to Tuta Drive App");
+        startActivity(new Intent(this, DashboardActivity.class));
+        finish();
+    }
 
 
     private boolean validate() {

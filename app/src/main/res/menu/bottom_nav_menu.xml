@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/nav_trasnsction"
         android:icon="@drawable/ic_cube"
+        app:showAsAction="always"
         tools:ignore="MenuTitle" />
     <item
         android:id="@+id/home"
+        app:showAsAction="always"
         android:icon="@mipmap/ic_home"
         tools:ignore="MenuTitle" />
     <item
         android:id="@+id/profile"
+        app:showAsAction="always"
         android:icon="@mipmap/ic_person_circle"
         tools:ignore="MenuTitle" />
 </menu>

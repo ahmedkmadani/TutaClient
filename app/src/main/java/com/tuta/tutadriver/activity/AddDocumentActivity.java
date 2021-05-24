@@ -26,7 +26,7 @@ public class AddDocumentActivity extends AppCompatActivity {
         });
 
 
-        mBinding.BtnContinue..setOnClickListener(v -> {
+        mBinding.BtnContinue.setOnClickListener(v -> {
             Intent i = new Intent(AddDocumentActivity.this, PaymentDetailsActivity.class);
             startActivity(i);
         });

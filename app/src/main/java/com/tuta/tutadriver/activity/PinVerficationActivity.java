@@ -7,8 +7,6 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
@@ -16,6 +14,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.tuta.tutadriver.R;
 import com.tuta.tutadriver.databinding.ActivityOtpBinding;
+import com.tuta.tutadriver.utils.CustomRequest;
 import com.tuta.tutadriver.utils.UrLs;
 import com.tuta.tutadriver.utils.Utility;
 
@@ -76,67 +75,80 @@ public class PinVerficationActivity extends Utility {
     }
 
     private void GetOTP(String phoneNumber) {
-        try {
-            RequestQueue requestQueue = Volley.newRequestQueue(this);
             JSONObject jsonBody = new JSONObject();
-            jsonBody.put("phone_number", phoneNumber);
-            JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.POST, UrLs.otpRequest, jsonBody,
-                    response -> {
-                        Log.d("res", response.toString());
-                        try {
-                             msg = response.getString("message");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        ShowSnackBar(getApplicationContext(), view, msg);
-                    }, error -> {
-                        VolleyLog.e("Error: ", error.getMessage());
-                       ShowSnackBar(getApplicationContext(), view, String.valueOf(R.string.error_msg_otp));
-                    });
-
-            requestQueue.add(request_json);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-        private void VerifyOTP(String stringPin, String phoneNumber) {
-            if (!validate()) {
-                return;
-            }
             try {
-                RequestQueue requestQueue = Volley.newRequestQueue(this);
-                JSONObject jsonBody = new JSONObject();
                 jsonBody.put("phone_number", phoneNumber);
-                jsonBody.put("otp_code", stringPin);
-                jsonBody.put("device_name", getDeviceName());
-                JsonObjectRequest request_json = new JsonObjectRequest(Request.Method.POST, UrLs.otpVerification, jsonBody,
-                        response -> {
-                            try {
-                                onSucceedActivity(phoneNumber);
-                                JSONObject data = response.getJSONObject("data");
-                                String verified = data.getString("verified");
-                                String phonenumber = data.getString("phone_number");
-                                msg = data.getString("message");
-                                if(verified == "true"){
-                                    ShowSnackBar(getApplicationContext(), view, msg);
-                                    onSucceedActivity(phonenumber);
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            Log.d("res", response.toString());
-                        }, error -> {
-                            VolleyLog.e("Error: ", error.getMessage());
-                            msg = getString(R.string.error_msg_verify_otp);
-                            ShowSnackBar(getApplicationContext(), view, msg);
-                        });
-
-                requestQueue.add(request_json);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+            Log.d("Get OTP Object", jsonBody.toString());
+            makeRawRequest(Request.Method.POST, UrLs.otpRequest, jsonBody, "", new CustomRequest.VolleyResponseListener() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    Log.d("response", response.toString());
+                    try {
+                        msg = response.getString("message");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    ShowSnackBar(getApplicationContext(), view, msg);
+                }
+
+                @Override
+                public void onError(String message) {
+                    Log.d("response", message);
+                    ShowSnackBar(getApplicationContext(), view, String.valueOf(R.string.error_msg_otp));
+                }
+            });
+    }
+
+
+    private void VerifyOTP(String stringPin, String fullPhoneNumber) {
+        if (!validate()) {
+            return;
         }
+         JSONObject jsonBody = new JSONObject();
+            try {
+                jsonBody.put("phone_number", fullPhoneNumber);
+                jsonBody.put("otp_code", stringPin);
+                jsonBody.put("device_name", "Postman");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Log.d("data", jsonBody.toString());
+            makeRawRequest(Request.Method.POST, UrLs.otpVerification, jsonBody, "", new CustomRequest.VolleyResponseListener() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    Log.d("response", response.toString());
+                    try {
+//                        String access_token = response.getString("access_token");
+//                        if (access_token != null) {
+//                            onSiginSuccess();
+//                        } else {
+                            JSONObject data = response.getJSONObject("data");
+                                String verified = data.getString("verified");
+                                String phonenumber = data.getString("phone_number");
+                                msg = data.getString("message");
+                                if(verified == "true") {
+                                    ShowSnackBar(getApplicationContext(), view, msg);
+                                    onSucceedActivity(phonenumber);
+
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                @Override
+                public void onError(String message) {
+                    Log.e("response", message);
+                    msg = getString(R.string.error_msg_verify_otp);
+                    ShowSnackBar(getApplicationContext(), view, msg);
+                }
+            });
+
+        }
+
 
     private void onSucceedActivity(String phonenumber) {
         Intent i = new Intent(PinVerficationActivity.this, CreateAccountActivity.class);
@@ -144,7 +156,13 @@ public class PinVerficationActivity extends Utility {
         startActivity(i);
     }
 
-    private boolean validate() {
+    private void onSiginSuccess() {
+        ShowSnackBar(getApplicationContext(), view,  " , Welcome back to Tuta Drive App");
+        startActivity(new Intent(this, DashboardActivity.class));
+        finish();
+    }
+
+        private boolean validate() {
         boolean valid = true;
         if (mBinding.tutaPinView.getText().toString().isEmpty()) {
             valid = false;
